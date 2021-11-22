@@ -1,19 +1,20 @@
 from unittest import TestCase, mock
 import artist as a
 import song as s
+from custom_exceptions import BreakLoopError
 
 
 class TestHasStatistics(TestCase):
     def setUp(self) -> None:
         self.artist = a.Artist("")
 
-    def test_output_false(self):
+    def test_shouldReturnFalse_whenStatisticsIsNone(self):
         actual = self.artist.has_statistics()
         expected = False
 
         self.assertEqual(actual, expected)
 
-    def test_output_true(self):
+    def test_shouldReturnTrue_whenStatisticsIsNotNone(self):
         self.artist.statistics = 123
 
         actual = self.artist.has_statistics()
@@ -38,7 +39,7 @@ class TestCalculateMeanWordcount(TestCase):
 
         self.artist.song_list = self.song_list
 
-    def test_output_successful(self):
+    def test_shouldReturnCorrectMean(self):
         actual = self.artist.calculate_mean_wordcount()
         expected = sum(
             [song.wordcount for song in self.artist.song_list if song.has_wordcount]
@@ -46,7 +47,7 @@ class TestCalculateMeanWordcount(TestCase):
 
         self.assertEqual(actual, expected)
 
-    def test_output_failure(self):
+    def test_shouldReturnCorrectMean_whenLessSongsWithWordCount(self):
         self.artist.song_list[2].has_wordcount = False
 
         actual = self.artist.calculate_mean_wordcount()
@@ -56,7 +57,7 @@ class TestCalculateMeanWordcount(TestCase):
 
         self.assertEqual(actual, expected)
 
-    def test_output_failure_divideByZero(self):
+    def test_shouldRetturnNone_whenNoSongsHaveWordCount(self):
         self.artist.song_list[0].has_wordcount = False
         self.artist.song_list[1].has_wordcount = False
         self.artist.song_list[2].has_wordcount = False
@@ -85,14 +86,14 @@ class TestCalculateMaxWordcount(TestCase):
 
         self.artist.song_list = self.song_list
 
-    def test_output_successful(self):
+    def test_shouldReturnMax(self):
         actual = self.artist.calculate_max_wordcount()
         expected = self.true_max
 
         self.assertEqual(actual, expected)
         self.assertNotEqual(actual, self.false_max)
 
-    def test_output_whenNoSongs(self):
+    def test_shouldReturnZero_whenSongListEmpty(self):
         for song in self.artist.song_list:
             song.has_wordcount = False
         actual = self.artist.calculate_max_wordcount()
@@ -119,14 +120,14 @@ class TestCalculateMinWordcount(TestCase):
 
         self.artist.song_list = self.song_list
 
-    def test_output_successful(self):
+    def test_shouldReturnMin(self):
         actual = self.artist.calculate_min_wordcount()
         expected = self.true_min
 
         self.assertEqual(actual, expected)
         self.assertNotEqual(actual, self.false_min)
 
-    def test_output_whenNoSongs(self):
+    def test_shouldReturnZero_whenSongListEmpty(self):
         for song in self.artist.song_list:
             song.has_wordcount = False
         actual = self.artist.calculate_min_wordcount()
@@ -152,13 +153,13 @@ class TestCalculateVarianceWordcount(TestCase):
         self.artist.song_list = self.song_list
         self.artist.wordcount_mean = 20
 
-    def test_output_successful(self):
+    def test_shouldReturnVariance(self):
         actual = self.artist.calculate_variance_wordcount()
         expected = 66.6666667
 
         self.assertAlmostEqual(actual, expected)
 
-    def test_output_hasZeroMean(self):
+    def test_shouldReturnZero_whenMeanIsZero(self):
         for song in self.artist.song_list:
             song.has_wordcount = False
         self.artist.wordcount_mean = 0
@@ -174,13 +175,13 @@ class TestCalculateStandardDeviationWordcount(TestCase):
         self.artist = a.Artist("")
         self.artist.wordcount_variance = 25
 
-    def test_output_successful(self):
+    def test_shouldReturnStandardDeviation(self):
         actual = self.artist.calculate_standard_deviation_wordcount()
         expected = self.artist.wordcount_variance ** 0.5
 
         self.assertEqual(actual, expected)
 
-    def test_output_varianceIsZero(self):
+    def test_shouldReturnZero_whenVarianceIsZero(self):
         self.artist.wordcount_variance = 0
 
         actual = self.artist.calculate_standard_deviation_wordcount()
@@ -208,15 +209,15 @@ class TestGetArtistStatistics(TestCase):
             return_value=self.standard_dev
         )
 
-    def test_output_whenNoSongs(self):
-        with self.assertRaises(a.BreakLoopError) as err:
+    def test_shouldRaiseBreakLoopError_whenSongListIsEmptyList(self):
+        with self.assertRaises(BreakLoopError) as err:
             self.artist.get_artist_statistics()
 
         actual = err.exception.args[0]
         expected = "Artist has no songs in song list. Unable to calculate statistics"
         self.assertEqual(actual, expected)
 
-    def test_output_successful(self):
+    def test_shouldReturnDictionaryWithStatistics(self):
         self.set_up_mocks()
         self.artist.song_list = None
         actual = self.artist.get_artist_statistics()

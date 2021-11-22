@@ -7,7 +7,7 @@ import song
 
 class TestGetArtistReponse(TestCase):
     @mock.patch("api_caller.get_artist_list_from_name")
-    def test_output_successful(self, mock_api_call):
+    def test_shouldReturnDictionary(self, mock_api_call):
         mock_api_call.return_value = _response = {"artists": [1, 2, 3]}
 
         actual = al.get_artist_response("")
@@ -15,7 +15,9 @@ class TestGetArtistReponse(TestCase):
         self.assertEqual(actual, expected)
 
     @mock.patch("api_caller.get_artist_list_from_name")
-    def test_output_failure(self, mock_api_call):
+    def test_shouldRaiseBreakLoopError_whenDictionaryHasNoArtistsKey(
+        self, mock_api_call
+    ):
         mock_api_call.return_value = _response = {"artists": []}
 
         with self.assertRaises(BreakLoopError) as err:
@@ -32,12 +34,12 @@ class TestGetArtistList(TestCase):
         self.test_dict_good = {"artists": self.test_artist_list, "other": 123}
         self.test_dict_bad = {"other2": 123}
 
-    def test_output_successful(self):
+    def test_shouldReturnArtistList(self):
         actual = al.get_artist_list(self.test_dict_good)
         expected = self.test_artist_list
         self.assertEqual(actual, expected)
 
-    def test_output_failure(self):
+    def test_shouldRaiseBreakLoopError_whenDictionaryHasNoArtistKey(self):
         with self.assertRaises(BreakLoopError) as err:
             al.get_artist_list(self.test_dict_bad)
 
@@ -52,13 +54,13 @@ class TestGetArtistMbidByIndex(TestCase):
         self.test_response_good = {"artists": self.test_id_list, "other": 123}
         self.test_response_bad = {"other": 123}
 
-    def test_output_successful(self):
+    def test_shouldReturnArtistMbid(self):
         index = 0
         actual = al.get_artist_mbid_by_index(self.test_response_good, index)
         expected = self.test_id_list[index]["id"]
         self.assertEqual(actual, expected)
 
-    def test_output_failure(self):
+    def test_shouldRaiseBreakLoopError_whenDictionaryHasNoArtistKey(self):
         index_good = 0
         index_bad = 20
         with self.assertRaises(BreakLoopError) as err:
@@ -67,6 +69,10 @@ class TestGetArtistMbidByIndex(TestCase):
         actual = err.exception.args[0]
         expected = "Id of artist not found"
         self.assertEqual(actual, expected)
+
+    def test_shouldRaiseBreakLoopError_whenIndexChosenNotAvailableInList(self):
+        index_good = 0
+        index_bad = 20
 
         with self.assertRaises(BreakLoopError) as err:
             al.get_artist_mbid_by_index(self.test_response_good, index_bad)
@@ -87,7 +93,7 @@ class TestGetPartialArtistSongList(TestCase):
     @mock.patch(
         "api_caller.get_songs_from_artist_mbid",
     )
-    def test_output_successful(self, return_function):
+    def test_shouldReturnSongList(self, return_function):
         return_function.return_value = self.return_fake_api_response(5)
         actual = [
             song.title for song in al.get_partial_artist_song_list(self._artist, 1)
@@ -96,14 +102,14 @@ class TestGetPartialArtistSongList(TestCase):
         self.assertEqual(actual, expected)
 
     @mock.patch("api_caller.get_songs_from_artist_mbid", return_value={"works": []})
-    def test_output_failure(self, func):
+    def test_shouldReturnEmptyList_whenWorksKeyEmpty(self, func):
         actual = al.get_partial_artist_song_list(self._artist, 0)
         expected = []
 
         self.assertEqual(actual, expected)
 
     @mock.patch("api_caller.get_songs_from_artist_mbid", return_value={})
-    def test_output_raises_error(self, func):
+    def test_shouldRaiseBreakLoopError_whenReponseDictionaryEmpty(self, func):
         with self.assertRaises(BreakLoopError) as err:
             al.get_partial_artist_song_list(self._artist, 0)
 
@@ -131,7 +137,7 @@ class TestAssignLyricsToSongs(TestCase):
         "api_caller.get_lyrics_from_artist_name_and_title",
         side_effect=return_function_good,
     )
-    def test_output_successful(self, func):
+    def test_shouldReturnListOfLyrics(self, func):
         al.assign_lyrics_to_songs(self._artist)
         actual = [song.lyrics for song in self._artist.song_list]
         expected = ["Song 1 lyrics", "Song 2 lyrics"]
@@ -141,7 +147,9 @@ class TestAssignLyricsToSongs(TestCase):
         "api_caller.get_lyrics_from_artist_name_and_title",
         side_effect=return_function_bad,
     )
-    def test_output_failure(self, func):
+    def test_shouldReturnNumberOfFailedLyricsAssigned_whenLyricsDontGetAssignedToSong(
+        self, func
+    ):
         actual = al.assign_lyrics_to_songs(self._artist)
         expected = 2
         self.assertEqual(actual, expected)

@@ -5,7 +5,7 @@ import api_caller
 # but with different API URLs. However, tests are needed nontheless.
 class TestGetArtistListFromName(TestCase):
     @mock.patch("api_caller.requests.get")
-    def test_output_successful(self, mock_api_call):
+    def test_shouldReturnDictionary(self, mock_api_call):
         json_response = {"key": "value"}
         mock_api_call.return_value.ok = True
         mock_api_call.return_value.json.return_value = json_response
@@ -16,7 +16,7 @@ class TestGetArtistListFromName(TestCase):
         self.assertEqual(actual, expected)
 
     @mock.patch("api_caller.requests.get")
-    def test_output_failure(self, mock_api_call):
+    def test_shouldRaiseLookupError(self, mock_api_call):
         status_code = 200
         mock_api_call.return_value.ok = False
         mock_api_call.return_value.status_code = status_code
@@ -29,9 +29,9 @@ class TestGetArtistListFromName(TestCase):
         self.assertEqual(actual, expected)
 
 
-class TestGetSongsFrromArrtistMbid(TestCase):
+class TestGetSongsFromArtistMbid(TestCase):
     @mock.patch("api_caller.requests.get")
-    def test_output_successful(self, mock_api_call):
+    def test_shouldReturnDictionary(self, mock_api_call):
         json_response = {"key": "value"}
         mock_api_call.return_value.ok = True
         mock_api_call.return_value.json.return_value = json_response
@@ -42,7 +42,7 @@ class TestGetSongsFrromArrtistMbid(TestCase):
         self.assertEqual(actual, expected)
 
     @mock.patch("api_caller.requests.get")
-    def test_output_failure(self, mock_api_call):
+    def test_shouldRaiseLookupError(self, mock_api_call):
         status_code = 200
         mock_api_call.return_value.ok = False
         mock_api_call.return_value.status_code = status_code
@@ -57,7 +57,7 @@ class TestGetSongsFrromArrtistMbid(TestCase):
 
 class TestGetLyricsFromArtistNameAndTitle(TestCase):
     @mock.patch("api_caller.requests.get")
-    def test_output_successful(self, mock_api_call):
+    def test_shouldReturnDictionary(self, mock_api_call):
         json_response = {"key": "value"}
         mock_api_call.return_value.ok = True
         mock_api_call.return_value.json.return_value = json_response
@@ -68,7 +68,7 @@ class TestGetLyricsFromArtistNameAndTitle(TestCase):
         self.assertEqual(actual, expected)
 
     @mock.patch("api_caller.requests.get")
-    def test_output_failure(self, mock_api_call):
+    def test_shouldRaiseLookupError(self, mock_api_call):
         status_code = 200
         mock_api_call.return_value.ok = False
         mock_api_call.return_value.status_code = status_code

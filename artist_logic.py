@@ -15,10 +15,10 @@ def get_artist_response(artist_name: str) -> dict:
         if response_dict["artists"] != []:
             return response_dict
         else:
-            raise artist.BreakLoopError("No artists found...")
+            raise BreakLoopError("No artists found...")
 
     except LookupError:
-        raise artist.BreakLoopError("Api GET request failed...")
+        raise BreakLoopError("Api GET request failed...")
 
 
 def get_artist_list(response_dict: dict) -> list:

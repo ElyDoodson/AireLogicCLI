@@ -6,7 +6,8 @@ My CLI has this, along with a few additional features.
 
 ## Running CLI app + Tests
 In order to run the CLI app, you should only have to run main.py via python 3.
-I found that running it in bash doesn't update in real time so best results are in an IDE I think (I used VSCode)
+I found that running it in bash doesn't update in real time so best results are in an IDE I think (I used VSCode).
+
 Only the extension "requests" is required to run the program.
 Install using:
 
@@ -21,7 +22,9 @@ This is my first time coding a full stack project. I've tried my best over the p
 I tried to have my code as module as I could think of and seperate into layers (like data access layer, business logic and then frontend).
 
 Although I have managed to query the api to get the songs of artists, I feel like there are other ways to do it that would provide a larger amount of data that i could have played with.
-I tried a few methods, however, each one of them had artists that didn't work (mostly due to groups vs solo artists) but this method seemed to work tthe best for me.
+I tried a few methods, however, each one of them had artists that didn't work (mostly due to groups vs solo artists) but this method seemed to work the best for me.
+
+I've not really written unit tests before, however, upon writing them I realised where I needed to refactor my code to make it better which was a greate learning experience.  
 
 I've worked on it for a few hours most days monday-friday however, with a full time job and a family to care for it took me longer than I'd hoped for.
 Any questions email me at elydoodson@hotmail.co.uk :).

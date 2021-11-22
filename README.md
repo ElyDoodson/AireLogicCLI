@@ -5,9 +5,12 @@ The aim of the app is to have an application which, when given a name of an arti
 My CLI has this, along with a few additional features.
 
 ## Running CLI app + Tests
-In order to run the CLI app, you should only have to run main.py via python 3. 
+In order to run the CLI app, you should only have to run main.py via python 3.
+I found that running it in bash doesn't update in real time so best results are in an IDE I think (I used VSCode)
 There are no external python modules needed to install so default python is all that is required.
-TTo run the tests, use a console with the command "python -m unittest discover -p 'test_*' -b" to run all tests.
+To run the tests, use a console with the command: 
+
+`python -m unittest discover -p 'test_*' -b`
 
 ## Comments
 This is my first time code a full stack project. I've tried my best over the past few weeks to research what is the best way to do x, y and z when it came to the project, however, as you likely know there is about 30 ways to do some things in python sometimes so without professional guidance i just had to pick the one that made most sense to me and the project.

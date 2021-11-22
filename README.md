@@ -7,7 +7,10 @@ My CLI has this, along with a few additional features.
 ## Running CLI app + Tests
 In order to run the CLI app, you should only have to run main.py via python 3.
 I found that running it in bash doesn't update in real time so best results are in an IDE I think (I used VSCode)
-There are no external python modules needed to install so default python is all that is required.
+Only the extension "requests" is required to run the program.
+Install using:
+
+`python -m pip install requests`
 To run the tests, use a console with the command: 
 
 `python -m unittest discover -p 'test_*' -b`

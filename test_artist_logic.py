@@ -82,6 +82,40 @@ class TestGetArtistMbidByIndex(TestCase):
         self.assertEqual(actual, expected)
 
 
+class TestGetArtistDisplayNameByIndex(TestCase):
+    def setUp(self) -> None:
+        self.test_name_list = [{"name": "Name1"}, {"name": "Name2"}]
+        self.test_response_good = {"artists": self.test_name_list, "other": 123}
+        self.test_response_bad = {"other": 123}
+
+    def test_shouldReturnArtistName(self):
+        index = 0
+        actual = al.get_artist_display_name_by_index(self.test_response_good, index)
+        expected = self.test_name_list[index]["name"]
+        self.assertEqual(actual, expected)
+
+    def test_shouldRaiseBreakLoopError_whenDictionaryHasNoArtistKey(self):
+        index_good = 0
+        index_bad = 20
+        with self.assertRaises(BreakLoopError) as err:
+            al.get_artist_display_name_by_index(self.test_response_bad, index_good)
+
+        actual = err.exception.args[0]
+        expected = "Name of artist not found"
+        self.assertEqual(actual, expected)
+
+    def test_shouldRaiseBreakLoopError_whenIndexChosenNotAvailableInList(self):
+        index_good = 0
+        index_bad = 20
+
+        with self.assertRaises(BreakLoopError) as err:
+            al.get_artist_display_name_by_index(self.test_response_good, index_bad)
+
+        actual = err.exception.args[0]
+        expected = "Chosen index not in range of artists available"
+        self.assertEqual(actual, expected)
+
+
 class TestGetPartialArtistSongList(TestCase):
     def return_fake_api_response(self, numer_of_songs):
         return {"works": [{"title": f"{song}"} for song in range(numer_of_songs)]}

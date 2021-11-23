@@ -50,6 +50,21 @@ def get_artist_mbid_by_index(response_dict: dict, index_of_artist: int) -> str:
         raise BreakLoopError("Chosen index not in range of artists available")
 
 
+def get_artist_display_name_by_index(response_dict: dict, index_of_artist: int) -> str:
+    """Gets artists display from reponse dictionary
+
+    :int index_of_artist: The index of the artist chosen by user
+    :str returns: MBID string of selected artist
+    """
+    try:
+        return response_dict["artists"][index_of_artist]["name"]
+
+    except KeyError:
+        raise BreakLoopError("Name of artist not found")
+    except IndexError:
+        raise BreakLoopError("Chosen index not in range of artists available")
+
+
 def assign_artist_song_list(artist_: artist.Artist) -> None:
     """Assigns a list of song names to artist using Artist MBID
 

@@ -118,6 +118,10 @@ class Main:
             user_message = "Please Choose the Id of the Artist you wish to select: "
             chosen_index = get_input_from_user(user_message, self._number_of_results)
             artist_mbid = al.get_artist_mbid_by_index(response, chosen_index - 1)
+            artist_display_name = al.get_artist_display_name_by_index(
+                response, chosen_index - 1
+            )
+            artist_.name = artist_display_name
             artist_.mbid = artist_mbid
             self._list_of_artists.append(artist_)
             print("Artist Added Successfully")
